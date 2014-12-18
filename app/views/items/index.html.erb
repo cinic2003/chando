@@ -1,0 +1,29 @@
+  <div class="panel panel-default">
+    <ul class="nav nav-pills" role="tablist">
+      <li role="presentation"><a href="/">当天销售统计</a></li>
+      <li role="presentation"><a href="/targets">当月目标</a></li>
+      <li role="presentation"><a href="/targets/list">当月销售</a></li>
+      <li role="presentation"><a href="/categories">分类</a></li>
+      <li role="presentation" class="active"><a href="/items">产品</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <% @items.each do |item| %>
+      <div>
+        <%= item.category.name %><span class=""><%= item.name %></span><%= item.price %>
+      </div>
+    <% end %>
+  </div>
+  <span class="">增加产品</span>
+  <%= form_for @item, html: {class: 'form-inline', role: 'form'} do |f| %>
+    <div class="form-group">
+      <div class="input-group">
+        <%= select_tag 'item[category_id]', options_for_select(Category.all.map{|c| [c.name, c.id]}) %>
+        <input class="form-control" type="text" name="item[name]" placeholder="输入产品名">
+        <input class="form-control" type="text" name="item[price]" placeholder="输入价格">
+      </div>
+      <button type="submit" class="btn btn-default">增加</button>
+    </div>
+    
+  <% end %>

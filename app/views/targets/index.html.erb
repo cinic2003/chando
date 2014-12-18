@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation"><a href="/">当天销售统计</a></li>
+    <li role="presentation" class="active"><a href="/targets">当月目标</a></li>
+    <li role="presentation"><a href="/targets/list">当月销售</a></li>
+    <li role="presentation"><a href="/categories">分类</a></li>
+    <li role="presentation"><a href="/items">产品</a></li>
+  </ul>
+</div>
+<div>
+  <% if @target %>
+    <%= @target.month %><span class=""><%= @target.amount %>元</span>
+  <% else %>
+    <%= form_for :target, html: {class: 'form-inline', role: 'form'} do |f| %>
+      <%= hidden_field_tag 'target[month]', "#{Date.today.year}-#{Date.today.month}" %>
+      <div class="form-group">
+        <div class="input-group">
+          <input class="form-control" type="text" name="target[amount]" placeholder="输入当月任务">
+        </div>
+        <button type="submit" class="btn btn-default">设定</button>
+      </div>
+    <% end %>
+  <% end %>
+</div>  

@@ -1,0 +1,10 @@
+/.bundle
+/.DS_Store
+*.keep
+/Gemfile.lock
+/log/*
+/tmp
+/config/mongoid.yml
+/config/secrets.yml
+
+

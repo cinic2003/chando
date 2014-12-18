@@ -1,0 +1,17 @@
+<div class="panel panel-default">
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation"><a href="/">当天销售统计</a></li>
+    <li role="presentation"><a href="/targets">当月目标</a></li>
+    <li role="presentation" class="active"><a href="/targets/list">当月销售</a></li>
+    <li role="presentation"><a href="/categories">分类</a></li>
+    <li role="presentation"><a href="/items">产品</a></li>
+  </ul>
+</div>
+
+<div>
+  <% @sales.each do |sale| %>
+    <div>
+      <%= sale.tday %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,107 @@
+
+<div class="panel panel-default">
+  <ul class="nav nav-pills" role="tablist">
+    <li role="presentation" class="active"><a href="#">当天销售统计</a></li>
+    <li role="presentation"><a href="/targets">当月目标</a></li>
+    <li role="presentation"><a href="/targets/list">当月销售</a></li>
+    <li role="presentation"><a href="/categories">分类</a></li>
+    <li role="presentation"><a href="/items">产品</a></li>
+  </ul>
+</div>
+<div>
+  <% if @sales %>
+  
+  <% else %>
+    <div class="row">
+      <div class="col-lg-2">
+        <div class="input-group">
+          <%= select_tag 'category', options_for_select(Category.all.map{|c| [c.name,c.id]}) %>
+        </div>
+      </div><!-- /.col-lg-2 -->
+      <div class="col-lg-2">
+        <div class="input-group">
+          <%= select_tag 'item' %>
+        </div>
+      </div><!-- /.col-lg-2 -->
+      <div class="col-lg-2">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">单价</button>
+          </span>
+          <input type="text" id="item_price" class="form-control">
+        </div>
+      </div><!-- /.col-lg-2 -->
+      <div class="col-lg-2">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">数量</button>
+          </span>
+          <input type="text" class="form-control" id="item_num" value='1'>
+        </div>
+      </div><!-- /.col-lg-2 -->
+      <div class="col-lg-2">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">总计</button>
+          </span>
+          <input type="text" class="form-control" id="item_total" />
+        </div><!-- /input-group -->
+      </div><!-- /.col-lg-2 -->
+    </div><!-- /.row -->
+    <button class="btn btn-default">卖出</button>
+    
+    <%= form_for :sale, html: {class: 'form-inline', role: 'form'} do |f| %>
+      <input class="form-control" type="text" name="" placeholder="输入分类名">
+      <button type="submit" class="btn btn-default">增加</button>
+    <% end %>
+  <% end %>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  get_items();
+});
+
+$('#category').on('change', function(){
+  get_items();
+});
+
+function get_items(){
+  var category_id = $('#category').val();
+  $.ajax({
+    url: 'targets/'+category_id+'/get_items_of_category',
+    type: 'get',
+    dataType: 'json',
+    success: function(data){
+      var html = '';
+      for(var i=0;i<data.items.length;i++){
+        html += '<option value="'+data.items[i].id+'" data_price="'+data.items[i].price+'">'+data.items[i].name+'</option>'
+      }
+      $('#item').html(html);
+      set_price();
+      count_total();
+    },
+    error: function(){alert('请求失败')}
+  });
+}
+
+$('#item').on('change', function(){
+  set_price();
+  count_total();
+});
+
+$('#item_num').on('change', function(){
+  count_total();
+});
+
+function set_price(){
+  var price = $('#item').find("option:selected")[0].attributes['data_price'].value;
+  $('#item_price').val(price);
+}
+
+function count_total(){
+  var price = $('#item_price').val();
+  var num = $('#item_num').val();
+  $('#item_total').val(parseInt(price)*parseInt(num));
+}
+</script>
